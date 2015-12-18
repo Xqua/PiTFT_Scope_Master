@@ -1,0 +1,156 @@
+#:kivy 1.9
+#:import FadeTransition kivy.uix.screenmanager.FadeTransition
+
+MainScreen:
+    transistion: FadeTransition()
+    LoginScreen:
+    ScopeScreen:
+    ScopeLoop:
+
+<LoginScreen>:
+    name: 'login'
+    on_enter: root.reset()
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            id: title
+            font_size: 20  
+            size: 320,20
+            text: "Login"
+
+        Button:        
+            id: chooseuser
+            size: 320,20
+            size_hint: None, None
+            text: "Select User"
+            on_press: root.createDropdown()
+
+        Button:
+            id: login
+            size: 320,50
+            size_hint: None, None
+            text: "Login"
+            on_release: root.login()
+        
+        Label:
+            id: messagebar
+            font_size: 12
+            size: 320,40 
+            size_hint: None, None
+            text: ""
+
+<ScopeScreen>:
+    name: 'select'
+    on_enter: root.on_enter()
+    BoxLayout:
+        orientation: 'vertical'
+        
+        Label:
+            id: title
+            font_size: 20  
+            size: 320,20
+            text: "Select Scope"
+
+        Button:
+            id: lumar
+            size: 100,50
+            text: "LUMAR"
+            on_release: 
+                root.lumar()
+                root.manager.current = 'scope'
+        
+        Button:        
+            id: axio
+            size: 200,20
+            text: "AxioImager"
+            on_release: 
+                root.axio()
+                root.manager.current = 'scope'
+        
+        BoxLayout:
+            orientation: 'horizontal'
+            
+            Button:
+                font_size: 13
+                size: 40,40
+                size_hint: None, None
+                text: "Home"
+                on_release: app.root.current = 'login'
+            
+            Label:
+                id: messagebar
+                font_size: 12
+                size: 280,40 
+                size_hint: None, None
+                text: ""
+
+<ScopeLoop>
+    name: 'scope'
+    on_enter: root.start()
+    on_leave: root.stop()
+    BoxLayout:
+        orientation: 'vertical'
+        
+        Label:
+            id: title
+            font_size: 20  
+            size: 320,20
+            text: "SCOPE"
+
+        BoxLayout:
+            orientation: 'horizontal'
+            Button:
+                id: on
+                size: 100,50
+                text: "ON"
+                on_release: root.on()
+
+            Button:
+                id: off
+                size: 100,50
+                text: "OFF"
+                on_release: root.off()
+
+        BoxLayout:
+            orientation: 'horizontal'
+            
+            Button:
+                id: hour
+                size: 100,50
+                text: "Add 1h"
+                on_release: root.hour()
+            
+            Button:
+                id: minute
+                size: 100,50
+                text: "Add 15min"
+                on_release: root.minute()
+
+        Label:
+            id: timer
+            text: '01:00:00'
+            font_size: 40
+
+        BoxLayout:
+            orientation: 'horizontal'
+            
+            Button:
+                font_size: 13
+                size: 40,40
+                size_hint: None, None
+                text: "Home"
+                on_release: app.root.current = 'login'
+
+            Button:
+                font_size: 13
+                size: 40,40
+                size_hint: None, None
+                text: "ALARM"
+                on_release: root.alert()
+
+            Label:
+                id: messagebar
+                font_size: 12
+                size: 240,40 
+                size_hint: None, None
+                text: ""
