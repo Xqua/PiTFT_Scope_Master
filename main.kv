@@ -5,7 +5,8 @@ MainScreen:
     transistion: FadeTransition()
     LoginScreen:
     ScopeScreen:
-    ScopeLoop:
+    ScopeLoopLumar:
+    ScopeLoopAxio:
 
 <LoginScreen>:
     name: 'login'
@@ -57,7 +58,7 @@ MainScreen:
             text: "LUMAR"
             on_release: 
                 root.lumar()
-                root.manager.current = 'scope'
+                root.manager.current = 'scopelumar'
         
         Button:        
             id: axio
@@ -65,7 +66,7 @@ MainScreen:
             text: "AxioImager"
             on_release: 
                 root.axio()
-                root.manager.current = 'scope'
+                root.manager.current = 'scopeaxio'
         
         BoxLayout:
             orientation: 'horizontal'
@@ -84,8 +85,72 @@ MainScreen:
                 size_hint: None, None
                 text: ""
 
-<ScopeLoop>
-    name: 'scope'
+<ScopeLoopLumar>
+    name: 'scopelumar'
+    on_enter: root.start()
+    on_leave: root.stop()
+    BoxLayout:
+        orientation: 'vertical'
+        
+        Label:
+            id: title
+            font_size: 20  
+            size: 320,20
+            text: "SCOPE"
+
+        BoxLayout:
+            orientation: 'horizontal'
+            Button:
+                id: on
+                size: 100,50
+                text: "ON"
+                on_release: root.on()
+
+            Button:
+                id: off
+                size: 100,50
+                text: "OFF"
+                on_release: root.off()
+
+        BoxLayout:
+            orientation: 'horizontal'
+            
+            Button:
+                id: hour
+                size: 100,50
+                text: "Add 1h"
+                on_release: root.hour()
+            
+            Button:
+                id: minute
+                size: 100,50
+                text: "Add 15min"
+                on_release: root.minute()
+
+        Label:
+            id: timer
+            text: '01:00:00'
+            font_size: 40
+
+        BoxLayout:
+            orientation: 'horizontal'
+            
+            Button:
+                font_size: 13
+                size: 40,40
+                size_hint: None, None
+                text: "Home"
+                on_release: app.root.current = 'login'
+
+            Label:
+                id: messagebar
+                font_size: 12
+                size: 240,40 
+                size_hint: None, None
+                text: ""
+
+<ScopeLoopAxio>
+    name: 'scopeaxio'
     on_enter: root.start()
     on_leave: root.stop()
     BoxLayout:

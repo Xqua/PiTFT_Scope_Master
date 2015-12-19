@@ -107,6 +107,7 @@ class ScopeScreen(Screen):
         if globalvars.has_key(globalvars['scope']):
             if not globalvars[globalvars['scope']]['state']:
                 print "resest"
+                print globalvars
                 globalvars[globalvars['scope']]['dt'] = 3600
                 globalvars[globalvars['scope']]['user'] = str(globalvars['user'])
         else:
@@ -116,15 +117,14 @@ class ScopeScreen(Screen):
             'dt':3600
             }
 
-class ScopeLoop(Screen):
+class ScopeLoopLumar(Screen):
     
     def start(self):
-        self.ids.title.text = globalvars['scope']
-        self.ids.messagebar.text = "Logged in as: %s\nScope used by %s" % (globalvars['user'], globalvars[globalvars['scope']]['user'])
+        self.ids.title.text = 'Lumar'
+        self.ids.messagebar.text = "Logged in as: %s\nScope used by %s" % (globalvars['user'], globalvars['Lumar']['user'])
         print globalvars
-        self.time = globalvars[globalvars['scope']]['dt']
-        self.ON = globalvars[globalvars['scope']]['state']
-        print self.time, self.ON
+        self.ON = globalvars['Lumar']['state']
+        print globalvars['Lumar']['dt'], self.ON
         self.ALERT = False
         if self.ON:
             self.ids.off.background_color = (1.0, 1.0, 1.0, 1.0)
@@ -144,14 +144,9 @@ class ScopeLoop(Screen):
         self.ON = True
         #DO GPIO STUFF HERE
         if PI:
-            if globalvars['scope'] == 'Lumar':
-                print "LUMAR",lumar
-                print "LUMAR ON"
-                GPIO.output(lumar, GPIO.HIGH)
-            elif globalvars['scope'] == 'AxioImager':
-                print "axio=",axio
-                print "AXIO ON"
-                GPIO.output(axio, GPIO.HIGH)
+            print "LUMAR",lumar
+            print "LUMAR ON"
+            GPIO.output(lumar, GPIO.HIGH)
         Clock.schedule_interval(self.updateTime, 1)
         
 
@@ -159,28 +154,23 @@ class ScopeLoop(Screen):
         self.ids.off.background_color = (1.0, 0.0, 0.0, 1.0)
         self.ids.on.background_color = (1.0, 1.0, 1.0, 1.0)
         self.ON = False
-        self.time = 3600
+        globalvars['Lumar']['dt'] = 3600
         self.ids.timer.text = "01:00:00"
         self.ids.timer.color = (1.0, 1.0, 1.0, 1.0)
         self.ALERT = False
         #DO GPIO STUFF HERE
         if PI:
-            if globalvars['scope'] == 'Lumar':
-                print "LUMAR",lumar
-                print "LUMAR OFF"
-                GPIO.output(lumar, GPIO.LOW)
-            elif globalvars['scope'] == 'AxioImager':
-                print "axio=",axio
-                print "AXIO OFF"
-                GPIO.output(axio, GPIO.LOW)
+            print "LUMAR",lumar
+            print "LUMAR OFF"
+            GPIO.output(lumar, GPIO.LOW)
         Clock.unschedule(self.updateTime)
 
     def hour(self):
-        self.time += 3600
+        globalvars['Lumar']['dt'] += 3600
         self.ids.timer.text = self.t2str()
 
     def minute(self):
-        self.time += 900
+        globalvars['Lumar']['dt'] += 900
         self.ids.timer.text = self.t2str()
 
     def ChkMovement(self):
@@ -196,9 +186,9 @@ class ScopeLoop(Screen):
             return False
 
     def t2str(self):
-        h = self.time / 60 / 60
-        mn = (self.time / 60) - (h * 60)
-        s = (self.time - (h * 3600) - (mn * 60))
+        h = globalvars['Lumar']['dt'] / 60 / 60
+        mn = (globalvars['Lumar']['dt'] / 60) - (h * 60)
+        s = (globalvars['Lumar']['dt'] - (h * 3600) - (mn * 60))
         h  = str(h)
         while len(h) < 2:
             h = '0' + h
@@ -211,15 +201,119 @@ class ScopeLoop(Screen):
         return "%s:%s:%s" % (h, mn, s)
 
     def updateTime(self, dt):
-        print dt, self.time
-        self.time -= 1
-        if self.time < 900 and not self.ALERT:
+        print dt, globalvars['Lumar']['dt']
+        globalvars['Lumar']['dt'] -= 1
+        if globalvars['Lumar']['dt'] < 900 and not self.ALERT:
             self.alert()
-        if self.time < 0:
+        if globalvars['Lumar']['dt'] < 0:
             self.off()
             self.alert2()
         if self.ChkMovement():
-            self.time = 3600
+            globalvars['Lumar']['dt'] = 3600
+        self.ids.timer.text = self.t2str()
+
+    def alert(self):
+        self.ALERT = True
+        slack.chat.post_message('#testrobots', 'The scope %s used by %s has been left ON and will be turned OFF in 15 min !' % (globalvars['scope'], globalvars['user']), as_user=True)
+        print "ALARM"
+
+    def alert2(self):
+        slack.chat.post_message('#testrobots', 'The scope %s used by %s has been turned OFF' % (globalvars['scope'], globalvars['user']), as_user=True)
+        print "ALARM"
+
+class ScopeLoopAxio(Screen):
+    
+    def start(self):
+        self.ids.title.text = 'AxioImager'
+        self.ids.messagebar.text = "Logged in as: %s\nScope used by %s" % (globalvars['user'], globalvars['AxioImager']['user'])
+        print globalvars
+        self.ON = globalvars['AxioImager']['state']
+        print globalvars['AxioImager']['dt'], self.ON
+        self.ALERT = False
+        if self.ON:
+            self.ids.off.background_color = (1.0, 1.0, 1.0, 1.0)
+            self.ids.on.background_color = (0.0, 1.0, 0.0, 1.0)
+        else:
+            self.ids.on.background_color = (1.0, 1.0, 1.0, 1.0)
+            self.ids.off.background_color = (1.0, 0.0, 0.0, 1.0)
+        self.ids.timer.text = self.t2str()
+
+    def stop(self):
+        globalvars['AxioImager']['state'] = self.ON
+
+    def on(self):
+        self.ids.on.background_color = (0.0, 1.0, 0.0, 1.0)
+        self.ids.off.background_color = (1.0, 1.0, 1.0, 1.0)
+        self.ids.timer.color = (1.0, 0.0, 0.0, 1.0)
+        self.ON = True
+        #DO GPIO STUFF HERE
+        if PI:
+            print "axio=",axio
+            print "AXIO ON"
+            GPIO.output(axio, GPIO.HIGH)
+        Clock.schedule_interval(self.updateTime, 1)
+        
+
+    def off(self):
+        self.ids.off.background_color = (1.0, 0.0, 0.0, 1.0)
+        self.ids.on.background_color = (1.0, 1.0, 1.0, 1.0)
+        self.ON = False
+        globalvars['AxioImager']['dt'] = 3600
+        self.ids.timer.text = "01:00:00"
+        self.ids.timer.color = (1.0, 1.0, 1.0, 1.0)
+        self.ALERT = False
+        #DO GPIO STUFF HERE
+        if PI:
+            print "axio=",axio
+            print "AXIO OFF"
+            GPIO.output(axio, GPIO.LOW)
+        Clock.unschedule(self.updateTime)
+
+    def hour(self):
+        globalvars['AxioImager']['dt'] += 3600
+        self.ids.timer.text = self.t2str()
+
+    def minute(self):
+        globalvars['AxioImager']['dt'] += 900
+        self.ids.timer.text = self.t2str()
+
+    def ChkMovement(self):
+        if PI:
+            state = GPIO.input(pir)
+            print "Movement state is:", state
+            if not state:
+                return False
+            else:
+                print "MOVEMENT"
+                return True
+        else:
+            return False
+
+    def t2str(self):
+        h = globalvars['AxioImager']['dt'] / 60 / 60
+        mn = (globalvars['AxioImager']['dt'] / 60) - (h * 60)
+        s = (globalvars['AxioImager']['dt'] - (h * 3600) - (mn * 60))
+        h  = str(h)
+        while len(h) < 2:
+            h = '0' + h
+        mn  = str(mn)
+        while len(mn) < 2:
+            mn = '0' + mn
+        s  = str(s)
+        while len(s) < 2:
+            s = '0' + s
+        return "%s:%s:%s" % (h, mn, s)
+
+    def updateTime(self, dt):
+        print dt, globalvars['AxioImager']['dt']
+        globalvars['AxioImager']['dt'] -= 1
+        if globalvars['AxioImager']['dt'] < 900 and not self.ALERT:
+            self.alert()
+        if globalvars['AxioImager']['dt'] < 0:
+            self.off()
+            self.alert2()
+        if self.ChkMovement():
+            globalvars['AxioImager']['dt'] = 3600
         self.ids.timer.text = self.t2str()
 
     def alert(self):
