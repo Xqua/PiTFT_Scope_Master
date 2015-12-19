@@ -182,7 +182,7 @@ class ScopeLoop(Screen):
 
     def updateTime(self, dt):
         print dt, self.time
-        if not self.ON:
+        if self.ON:
             if self.ChkMovement():
                 self.time = 3600
                 self.ids.timer.text = "01:00:00"
@@ -190,9 +190,11 @@ class ScopeLoop(Screen):
             self.time -= 1
             if self.time < 900 and not self.ALERT:
                 self.alert()
-            if self.time < 0:
+            elif self.time < 0:
                 self.off()
                 self.alert2()
+            elif self.ChkMovement():
+                self.time = 3600
             self.ids.timer.text = self.t2str()
 
     def alert(self):
