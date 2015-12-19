@@ -194,7 +194,6 @@ class ScopeLoop(Screen):
                 self.off()
                 self.alert2()
             if self.ChkMovement():
-                print "chkMovement", self.chkMovement
                 self.time = 3600
             self.ids.timer.text = self.t2str()
 
