@@ -96,7 +96,7 @@ class ScopeScreen(Screen):
                 globalvars[globalvars['scope']]['dt'] = 3600
                 globalvars[globalvars['scope']]['user'] = str(globalvars['user'])
         else:
-            globalvars['Lumar'] = {
+            globalvars[globalvars['scope']] = {
             'state':False,
             'user':str(globalvars['user']),
             'dt':3600
@@ -104,7 +104,17 @@ class ScopeScreen(Screen):
 
     def axio(self):
         globalvars['scope'] = 'AxioImager'
-
+        if globalvars.has_key(globalvars['scope']):
+            if not globalvars[globalvars['scope']]['state']:
+                print "resest"
+                globalvars[globalvars['scope']]['dt'] = 3600
+                globalvars[globalvars['scope']]['user'] = str(globalvars['user'])
+        else:
+            globalvars[globalvars['scope']] = {
+            'state':False,
+            'user':str(globalvars['user']),
+            'dt':3600
+            }
 
 class ScopeLoop(Screen):
     
