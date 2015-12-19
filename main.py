@@ -1,6 +1,22 @@
 from kivy.config import Config
-Config.set('graphics', 'width', '320')
-Config.set('graphics', 'height', '240')
+try:
+    import RPi.GPIO as GPIO
+    Config.set('graphics', 'fullscreen', 1)
+    Config.set('graphics', 'borderless', 1)
+    Config.set('graphics', 'show_cursor', 0)
+    Config.set('graphics', 'resizable', 0)
+    GPIO.setmode(GPIO.BOARD)
+    lumar = 13
+    axio = 15
+    pir = 11
+    GPIO.setup(pir, GPIO.IN, GPIO.PUD_DOWN)
+    GPIO.setup(lumar, GPIO.OUT)
+    GPIO.setup(axio, GPIO.IN)
+    PI = True
+except:
+    Config.set('graphics', 'width', '320')
+    Config.set('graphics', 'height', '240')
+    PI = False
 from kivy.app import App
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.floatlayout import FloatLayout
@@ -99,6 +115,11 @@ class ScopeLoop(Screen):
         self.ids.timer.color = (1.0, 0.0, 0.0, 1.0)
         self.ON = True
         #DO GPIO STUFF HERE
+        if PI:
+            if globalvars['scope'] == 'LUMAR':
+                GPIO.output(lumar, GPIO.HIGH)
+            elif globalvars['scope'] == 'AxioImager':
+                GPIO.output(axio, GPIO.HIGH)
         Clock.schedule_interval(self.updateTime, 1)
         
 
@@ -111,6 +132,11 @@ class ScopeLoop(Screen):
         self.ids.timer.text = "01:00:00"
         self.ALERT = False
         #DO GPIO STUFF HERE
+        if PI:
+            if globalvars['scope'] == 'LUMAR':
+                GPIO.output(lumar, GPIO.LOW)
+            elif globalvars['scope'] == 'AxioImager':
+                GPIO.output(axio, GPIO.LOW)
         Clock.unschedule(self.updateTime)
 
     def hour(self):
@@ -122,8 +148,11 @@ class ScopeLoop(Screen):
         self.ids.timer.text = self.t2str()
 
     def ChkMovement(self):
-        #DO GPIO STUFF HERE
-       return False
+        state = GPIO.input(pir)
+        if state == 0:
+            return False
+        else:
+            return True
 
     def t2str(self):
         h = self.time / 60 / 60
