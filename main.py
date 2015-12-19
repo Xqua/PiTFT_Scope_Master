@@ -159,7 +159,7 @@ class ScopeLoop(Screen):
     def ChkMovement(self):
         state = GPIO.input(pir)
         print "Movement state is:", state
-        if state:
+        if not state:
             return False
         else:
             print "MOVEMENT"
