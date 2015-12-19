@@ -117,7 +117,7 @@ class ScopeLoop(Screen):
         self.ON = True
         #DO GPIO STUFF HERE
         if PI:
-            if globalvars['scope'] == 'LUMAR':
+            if globalvars['scope'] == 'Lumar':
                 print "LUMAR",lumar
                 print "LUMAR ON"
                 GPIO.output(lumar, GPIO.HIGH)
@@ -138,7 +138,7 @@ class ScopeLoop(Screen):
         self.ALERT = False
         #DO GPIO STUFF HERE
         if PI:
-            if globalvars['scope'] == 'LUMAR':
+            if globalvars['scope'] == 'Lumar':
                 print "LUMAR",lumar
                 print "LUMAR OFF"
                 GPIO.output(lumar, GPIO.LOW)
