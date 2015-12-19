@@ -13,6 +13,7 @@ try:
     GPIO.setup(lumar, GPIO.OUT)
     GPIO.setup(axio, GPIO.IN)
     PI = True
+    print "GPIO READY"
 except:
     Config.set('graphics', 'width', '320')
     Config.set('graphics', 'height', '240')
