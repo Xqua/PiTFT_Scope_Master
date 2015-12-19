@@ -118,8 +118,10 @@ class ScopeLoop(Screen):
         #DO GPIO STUFF HERE
         if PI:
             if globalvars['scope'] == 'LUMAR':
+                print "LUMAR",lumar
                 GPIO.output(lumar, GPIO.HIGH)
             elif globalvars['scope'] == 'AxioImager':
+                print "axio=",axio
                 GPIO.output(axio, GPIO.HIGH)
         Clock.schedule_interval(self.updateTime, 1)
         
