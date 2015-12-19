@@ -190,10 +190,11 @@ class ScopeLoop(Screen):
             self.time -= 1
             if self.time < 900 and not self.ALERT:
                 self.alert()
-            elif self.time < 0:
+            if self.time < 0:
                 self.off()
                 self.alert2()
-            elif self.ChkMovement():
+            if self.ChkMovement():
+                print "chkMovement", self.chkMovement
                 self.time = 3600
             self.ids.timer.text = self.t2str()
 
