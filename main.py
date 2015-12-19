@@ -11,7 +11,7 @@ try:
     pir = 11
     GPIO.setup(pir, GPIO.IN, GPIO.PUD_DOWN)
     GPIO.setup(lumar, GPIO.OUT)
-    GPIO.setup(axio, GPIO.IN)
+    GPIO.setup(axio, GPIO.OUT)
     PI = True
     print "GPIO READY"
 except:
@@ -119,9 +119,11 @@ class ScopeLoop(Screen):
         if PI:
             if globalvars['scope'] == 'LUMAR':
                 print "LUMAR",lumar
+                print "LUMAR ON"
                 GPIO.output(lumar, GPIO.HIGH)
             elif globalvars['scope'] == 'AxioImager':
                 print "axio=",axio
+                print "AXIO ON"
                 GPIO.output(axio, GPIO.HIGH)
         Clock.schedule_interval(self.updateTime, 1)
         
@@ -137,8 +139,12 @@ class ScopeLoop(Screen):
         #DO GPIO STUFF HERE
         if PI:
             if globalvars['scope'] == 'LUMAR':
+                print "LUMAR",lumar
+                print "LUMAR OFF"
                 GPIO.output(lumar, GPIO.LOW)
             elif globalvars['scope'] == 'AxioImager':
+                print "axio=",axio
+                print "AXIO OFF"
                 GPIO.output(axio, GPIO.LOW)
         Clock.unschedule(self.updateTime)
 
@@ -155,6 +161,7 @@ class ScopeLoop(Screen):
         if state == 0:
             return False
         else:
+            print "MOVEMENT"
             return True
 
     def t2str(self):
