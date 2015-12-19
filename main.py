@@ -90,6 +90,17 @@ class ScopeScreen(Screen):
 
     def lumar(self):
         globalvars['scope'] = 'Lumar'
+        if globalvars.has_key(globalvars['scope']):
+            if not globalvars[globalvars['scope']]['state']:
+                print "resest"
+                globalvars[globalvars['scope']]['dt'] = 3600
+                globalvars[globalvars['scope']]['user'] = str(globalvars['user'])
+        else:
+            globalvars['Lumar'] = {
+            'state':False,
+            'user':str(globalvars['user']),
+            'dt':3600
+            }
 
     def axio(self):
         globalvars['scope'] = 'AxioImager'
@@ -99,16 +110,22 @@ class ScopeLoop(Screen):
     
     def start(self):
         self.ids.title.text = globalvars['scope']
-        self.ids.messagebar.text = "Logged in as: %s" % globalvars['user']
-        self.time = 3600
-        self.ON = False
+        self.ids.messagebar.text = "Logged in as: %s\nScope used by %s" % (globalvars['user'], globalvars[globalvars['scope']]['user'])
+        print globalvars
+        self.time = globalvars[globalvars['scope']]['dt']
+        self.ON = globalvars[globalvars['scope']]['state']
+        print self.time, self.ON
         self.ALERT = False
-        self.ids.on.background_color = (1.0, 1.0, 1.0, 1.0)
-        self.ids.off.background_color = (1.0, 0.0, 0.0, 1.0)
+        if self.ON:
+            self.ids.off.background_color = (1.0, 1.0, 1.0, 1.0)
+            self.ids.on.background_color = (0.0, 1.0, 0.0, 1.0)
+        else:
+            self.ids.on.background_color = (1.0, 1.0, 1.0, 1.0)
+            self.ids.off.background_color = (1.0, 0.0, 0.0, 1.0)
         self.ids.timer.text = self.t2str()
 
     def stop(self):
-        Clock.unschedule(self.updateTime)
+        globalvars['Lumar']['state'] = self.ON
 
     def on(self):
         self.ids.on.background_color = (0.0, 1.0, 0.0, 1.0)
@@ -131,10 +148,10 @@ class ScopeLoop(Screen):
     def off(self):
         self.ids.off.background_color = (1.0, 0.0, 0.0, 1.0)
         self.ids.on.background_color = (1.0, 1.0, 1.0, 1.0)
-        self.ids.timer.color = (1.0, 1.0, 1.0, 1.0)
         self.ON = False
         self.time = 3600
         self.ids.timer.text = "01:00:00"
+        self.ids.timer.color = (1.0, 1.0, 1.0, 1.0)
         self.ALERT = False
         #DO GPIO STUFF HERE
         if PI:
@@ -157,13 +174,16 @@ class ScopeLoop(Screen):
         self.ids.timer.text = self.t2str()
 
     def ChkMovement(self):
-        state = GPIO.input(pir)
-        print "Movement state is:", state
-        if not state:
-            return False
+        if PI:
+            state = GPIO.input(pir)
+            print "Movement state is:", state
+            if not state:
+                return False
+            else:
+                print "MOVEMENT"
+                return True
         else:
-            print "MOVEMENT"
-            return True
+            return False
 
     def t2str(self):
         h = self.time / 60 / 60
@@ -182,20 +202,15 @@ class ScopeLoop(Screen):
 
     def updateTime(self, dt):
         print dt, self.time
-        if not self.ON:
-            if self.ChkMovement():
-                self.time = 3600
-                self.ids.timer.text = "01:00:00"
-        else:
-            self.time -= 1
-            if self.time < 900 and not self.ALERT:
-                self.alert()
-            if self.time < 0:
-                self.off()
-                self.alert2()
-            if self.ChkMovement():
-                self.time = 3600
-            self.ids.timer.text = self.t2str()
+        self.time -= 1
+        if self.time < 900 and not self.ALERT:
+            self.alert()
+        if self.time < 0:
+            self.off()
+            self.alert2()
+        if self.ChkMovement():
+            self.time = 3600
+        self.ids.timer.text = self.t2str()
 
     def alert(self):
         self.ALERT = True

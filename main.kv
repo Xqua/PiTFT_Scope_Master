@@ -15,12 +15,12 @@ MainScreen:
         Label:
             id: title
             font_size: 20  
-            size: 320,20
+            size: 320,30
             text: "Login"
 
         Button:        
             id: chooseuser
-            size: 320,20
+            size: 320,30
             size_hint: None, None
             text: "Select User"
             on_press: root.createDropdown()
@@ -140,13 +140,6 @@ MainScreen:
                 size_hint: None, None
                 text: "Home"
                 on_release: app.root.current = 'login'
-
-            Button:
-                font_size: 13
-                size: 40,40
-                size_hint: None, None
-                text: "ALARM"
-                on_release: root.alert()
 
             Label:
                 id: messagebar
