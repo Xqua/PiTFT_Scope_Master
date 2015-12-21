@@ -8,8 +8,8 @@ try:
     Config.set('graphics', 'show_cursor', 0)
     Config.set('graphics', 'resizable', 0)
     GPIO.setmode(GPIO.BOARD)
-    lumar = 13
-    axio = 15
+    lumar = 15
+    axio = 13
     pir = 11
     GPIO.setup(pir, GPIO.IN, GPIO.PUD_DOWN)
     GPIO.setup(lumar, GPIO.OUT)
