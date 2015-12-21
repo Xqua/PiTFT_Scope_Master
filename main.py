@@ -66,7 +66,7 @@ class LoginScreen(Screen):
             dropdown = DropDown()
             chooseuser.bind(on_release=dropdown.open)
             for user in userlist:
-                btn = Button(text='%s' % user, size_hint_y=None, height=20)
+                btn = Button(text='%s' % user, size_hint_y=None, height=30)
                 btn.bind(on_release=lambda btn: dropdown.select(btn.text))
                 dropdown.add_widget(btn)
             dropdown.bind(on_select=lambda instance, x: setattr(chooseuser, 'text', x))
@@ -215,7 +215,8 @@ class ScopeLoopLumar(Screen):
             self.off()
             self.alert2()
         if self.ChkMovement():
-            globalvars['Lumar']['dt'] = 3600
+            if globalvars['Lumar']['dt'] <= 3600:
+                globalvars['Lumar']['dt'] = 3600
         self.ids.timer.text = self.t2str()
 
     def alert(self):
@@ -319,7 +320,8 @@ class ScopeLoopAxio(Screen):
             self.off()
             self.alert2()
         if self.ChkMovement():
-            globalvars['AxioImager']['dt'] = 3600
+            if globalvars['AxioImager']['dt'] <= 3600:
+                globalvars['AxioImager']['dt'] = 3600
         self.ids.timer.text = self.t2str()
 
     def alert(self):
