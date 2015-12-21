@@ -1,8 +1,8 @@
 #:kivy 1.9
-#:import FadeTransition kivy.uix.screenmanager.FadeTransition
+#:import SlideTransition kivy.uix.screenmanager.SlideTransition
 
 MainScreen:
-    transistion: FadeTransition()
+    transition: SlideTransition()
     LoginScreen:
     ScopeScreen:
     ScopeLoopLumar:
@@ -58,6 +58,7 @@ MainScreen:
             text: "LUMAR"
             on_release: 
                 root.lumar()
+                root.manager.transition.direction = 'left'
                 root.manager.current = 'scopelumar'
         
         Button:        
@@ -66,6 +67,7 @@ MainScreen:
             text: "AxioImager"
             on_release: 
                 root.axio()
+                root.manager.transition.direction = 'left'
                 root.manager.current = 'scopeaxio'
         
         BoxLayout:
@@ -76,7 +78,9 @@ MainScreen:
                 size: 40,40
                 size_hint: None, None
                 text: "Home"
-                on_release: app.root.current = 'login'
+                on_release: 
+                    root.manager.transition.direction = 'right'
+                    app.root.current = 'login'
             
             Label:
                 id: messagebar
@@ -140,14 +144,18 @@ MainScreen:
                 size: 40,40
                 size_hint: None, None
                 text: "Home"
-                on_release: app.root.current = 'login'
+                on_release: 
+                    root.manager.transition.direction = 'right'
+                    app.root.current = 'login'
 
             Button:
                 font_size: 13
                 size: 40,40
                 size_hint: None, None
                 text: "Back"
-                on_release: app.root.current = 'select'
+                on_release: 
+                    root.manager.transition.direction = 'right'
+                    app.root.current = 'select'
 
             Label:
                 id: messagebar
@@ -211,14 +219,18 @@ MainScreen:
                 size: 40,40
                 size_hint: None, None
                 text: "Home"
-                on_release: app.root.current = 'login'
+                on_release: 
+                    root.manager.transition.direction = 'right'
+                    app.root.current = 'login'
 
             Button:
                 font_size: 13
                 size: 40,40
                 size_hint: None, None
                 text: "Back"
-                on_release: app.root.current = 'select'
+                on_release: 
+                    root.manager.transition.direction = 'right'
+                    app.root.current = 'select'
 
             Label:
                 id: messagebar

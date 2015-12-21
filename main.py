@@ -1,3 +1,5 @@
+import kivy
+kivy.require('1.9.1')
 from kivy.config import Config
 try:
     import RPi.GPIO as GPIO
@@ -31,7 +33,7 @@ from kivy.uix.button import Button
 from kivy.uix.spinner import Spinner
 from kivy.clock import Clock
 from kivy.base import runTouchApp
-from kivy.uix.screenmanager import ScreenManager, Screen, FadeTransition
+from kivy.uix.screenmanager import ScreenManager, Screen, SlideTransition
 from slacker import Slacker
 
 slack = Slacker('xoxb-16330556231-3F73A8ZxhFBcA20j1p3kN03M')
@@ -81,6 +83,7 @@ class LoginScreen(Screen):
         print "click login"
         print self.ids.chooseuser.text
         if self.ids.chooseuser.text != "Select User":
+            self.manager.transition.direction = 'left'
             self.manager.current = 'select'
             globalvars['user'] = self.ids.chooseuser.text
         else:
