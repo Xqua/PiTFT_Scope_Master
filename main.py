@@ -8,8 +8,8 @@ try:
     Config.set('graphics', 'show_cursor', 0)
     Config.set('graphics', 'resizable', 0)
     GPIO.setmode(GPIO.BOARD)
-    lumar = 15
-    axio = 13
+    lumar = 13
+    axio = 15
     pir = 11
     GPIO.setup(pir, GPIO.IN, GPIO.PUD_DOWN)
     GPIO.setup(lumar, GPIO.OUT)
@@ -220,11 +220,11 @@ class ScopeLoopLumar(Screen):
 
     def alert(self):
         self.ALERT = True
-        slack.chat.post_message('#testrobots', 'The scope %s used by %s has been left ON and will be turned OFF in 15 min !' % (globalvars['scope'], globalvars['user']), as_user=True)
+        slack.chat.post_message('#microscopes', '@channel: The scope %s used by %s has been left ON and will be turned OFF in 15 min !' % (globalvars['scope'], globalvars[globalvars['scope']]['user']), as_user=True)
         print "ALARM"
 
     def alert2(self):
-        slack.chat.post_message('#testrobots', 'The scope %s used by %s has been turned OFF' % (globalvars['scope'], globalvars['user']), as_user=True)
+        slack.chat.post_message('#microscopes', '@channel: The scope %s used by %s has been turned OFF automatically' % (globalvars['scope'], globalvars[globalvars['scope']]['user']), as_user=True)
         print "ALARM"
 
 class ScopeLoopAxio(Screen):
@@ -324,11 +324,11 @@ class ScopeLoopAxio(Screen):
 
     def alert(self):
         self.ALERT = True
-        slack.chat.post_message('#testrobots', 'The scope %s used by %s has been left ON and will be turned OFF in 15 min !' % (globalvars['scope'], globalvars['user']), as_user=True)
+        slack.chat.post_message('#microscopes', '@channel: The scope %s used by %s has been left ON and will be turned OFF in 15 min !' % (globalvars['scope'], globalvars[globalvars['scope']]['user']), as_user=True)
         print "ALARM"
 
     def alert2(self):
-        slack.chat.post_message('#testrobots', 'The scope %s used by %s has been turned OFF' % (globalvars['scope'], globalvars['user']), as_user=True)
+        slack.chat.post_message('#microscopes', '@channel: The scope %s used by %s has been turned OFF automatically' % (globalvars['scope'], globalvars[globalvars['scope']]['user']), as_user=True)
         print "ALARM"
 
 class MainScreen(ScreenManager):
