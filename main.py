@@ -39,7 +39,10 @@ slack = Slacker('xoxb-16330556231-3F73A8ZxhFBcA20j1p3kN03M')
 globalvars = {}
 
 userlist = []
-f = open('/home/pi/PiTFT_Scope_Master/userlist')
+try:
+    f = open('/home/pi/PiTFT_Scope_Master/userlist')
+except:
+    f = open('userlist')
 lines = f.readlines()
 for l in lines:
     userlist.append(l.strip())

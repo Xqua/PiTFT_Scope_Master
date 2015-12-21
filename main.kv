@@ -142,6 +142,13 @@ MainScreen:
                 text: "Home"
                 on_release: app.root.current = 'login'
 
+            Button:
+                font_size: 13
+                size: 40,40
+                size_hint: None, None
+                text: "Back"
+                on_release: app.root.current = 'select'
+
             Label:
                 id: messagebar
                 font_size: 12
@@ -205,6 +212,13 @@ MainScreen:
                 size_hint: None, None
                 text: "Home"
                 on_release: app.root.current = 'login'
+
+            Button:
+                font_size: 13
+                size: 40,40
+                size_hint: None, None
+                text: "Back"
+                on_release: app.root.current = 'select'
 
             Label:
                 id: messagebar
